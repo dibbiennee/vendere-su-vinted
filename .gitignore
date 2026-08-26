@@ -1,0 +1,5 @@
+.DS_Store
+*.tmp
+
+# screenshot personale caricato per errore, non fa parte del progetto
+riferimenti/PHOTO-*.jpg

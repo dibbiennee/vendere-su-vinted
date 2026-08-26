@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Cartellino</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Gli strumenti per chi vende su Vinted: prezzo e margine, diagnosi degli articoli fermi, schede pronte, magazzino, conti e soglie fiscali.">
+<meta name="theme-color" content="#0A2E33">
+<!--
+THESIS: un'app di strumenti si apre su un campo dove dici cosa ti serve, non su una
+dashboard di widget che nessuno ha chiesto. Scrivi "45" e ti offre il calcolo del margine.
+Rifiuta la griglia di card statiche e la sidebar di icone mute.
+OWN-WORLD: scocca petrolio profondo #0A2E33 come piano di lavoro, fogli bianchi per gli
+strumenti, accento acqua #5FD3D8, giallo #FFC93D per gli avvisi, verde #35C48E per gli esiti
+buoni. Archivo per interfaccia, Faustina per i testi lunghi, cifre tabulari ovunque.
+STORY: apre l'app al mercatino o alla scrivania, trova lo strumento in un gesto, ottiene un
+numero o una risposta, torna al lavoro.
+FIRST VIEWPORT: campo di comando grande, sei strumenti nominati sotto, niente altro.
+FORM: launcher a comando, struttura 6 della lista ordinata, seed 68c5c199.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Faustina:wght@400;600&family=Share+Tech+Mono&display=swap">
+<style>
+:root{
+  --scocca:#0A2E33;--scocca-2:#082429;--scocca-3:#14454C;
+  --foglio:#FFFFFF;--foglio-2:#F3F6F6;--riga:#DFE7E7;--riga-2:#EDF2F2;
+  --ink:#0E1B1D;--ink-2:#4A5B5E;--ink-3:#5D6D70;
+  --acqua:#5FD3D8;--acqua-scuro:#0E7A82;--verde:#1E8A5F;--verde-tint:#E7F5EE;
+  --giallo:#FFC93D;--giallo-tint:#FFF6DF;--rosso:#C43A2F;--rosso-tint:#FCEDEB;
+  --f:Archivo,"Helvetica Neue",Arial,system-ui,sans-serif;
+  --f-read:Faustina,Georgia,serif;
+  --r:10px;--r-s:7px;
+  --ombra:0 1px 2px rgba(0,0,0,.10),0 12px 26px -14px rgba(0,0,0,.32);
+  --gut:clamp(1rem,4vw,1.6rem);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--scocca);color:var(--ink);font-family:var(--f);font-size:16px;
+  line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acqua);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:700}
+p{margin:0 0 .8em}
+.tab{font-variant-numeric:tabular-nums}
+
+/* ============ scocca ============ */
+.app{max-width:60rem;margin:0 auto;padding:0 var(--gut) 4rem;min-height:100vh;display:flex;flex-direction:column}
+.testa{display:flex;align-items:center;gap:.7rem;padding:1.1rem 0 .9rem}
+.logo{display:flex;align-items:center;gap:.55rem;color:#EAF4F4;font-weight:700;letter-spacing:-.02em;font-size:1.05rem}
+.logo .m{width:28px;height:28px;border-radius:7px;background:var(--acqua);color:var(--scocca);
+  display:grid;place-content:center;font-weight:700;font-size:.85rem}
+.testa .sp{flex:1}
+.pill{font-size:.74rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:#9FD5D8;border:1px solid rgba(95,211,216,.35);border-radius:100px;padding:.2rem .6rem}
+
+/* ============ launcher ============ */
+.launcher{padding:clamp(1rem,5vw,2.4rem) 0 1.4rem;text-align:center}
+.launcher h1{color:#fff;font-size:clamp(1.5rem,1.2rem + 1.6vw,2.1rem);letter-spacing:-.03em}
+.launcher .sub{color:#9FB9BC;font-size:1rem;margin:.5rem 0 1.5rem}
+.cerca{position:relative;max-width:34rem;margin:0 auto}
+.cerca input[type=text]{
+  width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(95,211,216,.3);
+  color:#fff;border-radius:14px;padding:1rem 2.6rem 1rem 3rem;min-height:60px;font-size:1.08rem;
+}
+.cerca input[type=text]::placeholder{color:#89A5A8}
+.cerca input[type=text]:focus{outline:none;border-color:var(--acqua);background:rgba(255,255,255,.12)}
+.cerca .lente{position:absolute;left:1.05rem;top:50%;transform:translateY(-50%);pointer-events:none}
+.cerca kbd{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);
+  font-family:var(--f);font-size:.72rem;color:#7E9B9E;border:1px solid rgba(255,255,255,.2);
+  border-radius:5px;padding:.15rem .4rem;background:rgba(255,255,255,.05)}
+@media(max-width:34rem){.cerca kbd{display:none}}
+.suggerito{
+  max-width:34rem;margin:.7rem auto 0;background:var(--acqua);color:var(--scocca);
+  border-radius:var(--r-s);padding:.7rem .9rem;display:none;align-items:center;gap:.6rem;
+  text-align:left;font-size:.95rem;font-weight:600;cursor:pointer;border:0;width:100%;
+}
+.suggerito.on{display:flex}
+.suggerito .frecc{margin-left:auto;font-weight:700}
+
+/* griglia strumenti */
+.strumenti{display:grid;gap:.8rem;margin-top:1.6rem}
+@media(min-width:34rem){.strumenti{grid-template-columns:1fr 1fr}}
+@media(min-width:52rem){.strumenti{grid-template-columns:repeat(3,1fr)}}
+.stru{
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);
+  padding:1rem;text-align:left;cursor:pointer;display:grid;gap:.35rem;color:#fff;
+  transition:background .15s ease-out,border-color .15s ease-out,transform .15s ease-out;
+}
+.stru:hover{background:rgba(255,255,255,.1);border-color:rgba(95,211,216,.45);transform:translateY(-2px)}
+.stru .ico{width:34px;height:34px;border-radius:9px;background:rgba(95,211,216,.16);
+  display:grid;place-content:center;margin-bottom:.3rem}
+.stru h3{font-size:1.05rem;color:#fff}
+.stru p{margin:0;font-size:.86rem;color:#9FB9BC;line-height:1.45}
+.stru .badge{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--scocca);background:var(--giallo);border-radius:4px;padding:.12rem .4rem;justify-self:start}
+.stru[hidden]{display:none}
+
+/* ============ schermata strumento ============ */
+.schermata{display:none;flex:1;flex-direction:column}
+.schermata.on{display:flex}
+.barra{display:flex;align-items:center;gap:.6rem;padding:.2rem 0 1rem}
+.indietro{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;
+  border-radius:var(--r-s);min-height:42px;padding:.4rem .8rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer}
+.indietro:hover{background:rgba(255,255,255,.14)}
+.barra h2{color:#fff;font-size:1.15rem}
+.barra .sp{flex:1}
+
+.foglio{background:var(--foglio);border-radius:var(--r);box-shadow:var(--ombra);overflow:hidden}
+.foglio+.foglio{margin-top:.9rem}
+.sez{padding:clamp(1rem,4vw,1.4rem)}
+.sez+.sez{border-top:1px solid var(--riga-2)}
+.sez h3{font-size:1rem;margin-bottom:.8rem}
+.aiuto{font-size:.85rem;color:var(--ink-3);line-height:1.5}
+
+.campi{display:grid;gap:.8rem}
+@media(min-width:30rem){.due{grid-template-columns:1fr 1fr}.tre{grid-template-columns:repeat(3,1fr)}}
+label.campo{display:grid;gap:.3rem;font-size:.82rem;font-weight:600;color:var(--ink-2)}
+input[type=text],input[type=number],input[type=date],select,textarea{
+  width:100%;background:#fff;border:1px solid var(--riga);border-radius:var(--r-s);
+  padding:.65rem .75rem;min-height:46px;font-size:1rem;color:var(--ink)}
+textarea{min-height:90px;resize:vertical;font-family:var(--f-read);line-height:1.55}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acqua-scuro);box-shadow:0 0 0 3px rgba(14,122,130,.14)}
+input::placeholder,textarea::placeholder{color:var(--ink-3)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;background:var(--acqua-scuro);
+  color:#fff;border:1px solid var(--acqua-scuro);border-radius:var(--r-s);min-height:46px;
+  padding:.6rem 1rem;font-weight:600;cursor:pointer;transition:background .15s ease-out}
+.btn:hover{background:#0B656C}
+.btn.chiaro{background:#fff;color:var(--ink);border-color:var(--riga)}
+.btn.chiaro:hover{background:var(--foglio-2)}
+.btn.pieno{width:100%}
+.btn.piccolo{min-height:38px;padding:.35rem .7rem;font-size:.88rem}
+.azioni{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.9rem}
+
+/* esiti */
+.esito{border-radius:var(--r-s);padding:1rem;display:grid;gap:.5rem}
+.esito.buono{background:var(--verde-tint)}
+.esito.attenzione{background:var(--giallo-tint)}
+.esito.male{background:var(--rosso-tint)}
+.esito .titolo{font-weight:700;font-size:1.02rem;display:flex;align-items:center;gap:.5rem}
+.esito p{margin:0;font-size:.93rem;line-height:1.55;color:var(--ink-2)}
+.numeroni{display:grid;gap:.6rem;margin-top:.2rem;grid-template-columns:repeat(3,1fr)}
+@media(max-width:23rem){.numeroni{grid-template-columns:1fr 1fr}}
+@media(max-width:30rem){.dato{padding:.6rem}.dato .vl{font-size:1.22rem}.dato .no{font-size:.72rem}}
+.dato{background:var(--foglio-2);border-radius:var(--r-s);padding:.8rem}
+.dato .et{font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+.dato .vl{font-size:1.5rem;font-weight:700;letter-spacing:-.03em;margin-top:.15rem}
+.dato .vl.giu{color:var(--rosso)}
+.dato .vl.su{color:var(--verde)}
+.dato .no{font-size:.78rem;color:var(--ink-3);margin-top:.1rem}
+
+.riga-conto{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--riga-2);font-size:.95rem}
+.riga-conto:last-child{border-bottom:0}
+.riga-conto b{font-variant-numeric:tabular-nums}
+.riga-conto.tot{font-weight:700;font-size:1.05rem;border-top:2px solid var(--ink);border-bottom:0;margin-top:.3rem;padding-top:.7rem}
+
+/* tabella magazzino */
+.tabella{width:100%;border-collapse:collapse;font-size:.9rem}
+.tabella th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);
+  padding:.5rem .55rem;border-bottom:1px solid var(--riga);white-space:nowrap}
+.tabella td{padding:.55rem;border-bottom:1px solid var(--riga-2);vertical-align:middle}
+.tabella tr:last-child td{border-bottom:0}
+.stato{font-size:.74rem;font-weight:600;border-radius:100px;padding:.15rem .5rem;white-space:nowrap}
+.stato.online{background:var(--verde-tint);color:var(--verde)}
+.stato.venduto{background:rgba(14,122,130,.12);color:var(--acqua-scuro)}
+.stato.da{background:var(--giallo-tint);color:#8A6100}
+.elimina{background:none;border:0;color:var(--ink-3);cursor:pointer;padding:.3rem;border-radius:5px;line-height:0}
+.elimina:hover{color:var(--rosso);background:var(--rosso-tint)}
+.vuoto{text-align:center;color:var(--ink-3);padding:2rem 1rem;font-size:.95rem}
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* scontrino */
+.scontrino-lavoro{display:grid;gap:1rem}
+@media(min-width:60rem){.scontrino-lavoro{grid-template-columns:minmax(0,1fr) 22rem;align-items:start}}
+.intesta-sez{display:flex;align-items:center;gap:.6rem;justify-content:space-between}
+.banco{background:rgba(0,0,0,.22);border-radius:var(--r);padding:1.2rem .8rem;display:grid;place-items:center}
+.scontrino{
+  background:#fff;color:#151515;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  font-size:12px;line-height:1.45;padding:18px 16px 16px;width:100%;max-width:19rem;
+  box-shadow:0 10px 26px -12px rgba(0,0,0,.55);--z:6px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - var(--z)),93.75% 100%,87.5% calc(100% - var(--z)),81.25% 100%,75% calc(100% - var(--z)),68.75% 100%,62.5% calc(100% - var(--z)),56.25% 100%,50% calc(100% - var(--z)),43.75% 100%,37.5% calc(100% - var(--z)),31.25% 100%,25% calc(100% - var(--z)),18.75% 100%,12.5% calc(100% - var(--z)),6.25% 100%,0 calc(100% - var(--z)))}
+.scontrino.stretto{max-width:14rem;font-size:11px}
+.s-testa{text-align:center;margin-bottom:10px}
+.s-logo{width:52px;height:52px;margin:0 auto 8px;border:2px solid #151515;border-radius:50%;
+  display:grid;place-content:center;overflow:hidden;font-weight:700;font-size:17px;letter-spacing:.04em}
+.s-logo img{width:100%;height:100%;object-fit:contain;padding:4px}
+.s-nome{font-weight:700;font-size:14px;letter-spacing:.14em}
+.scontrino.stretto .s-nome{font-size:12.5px;letter-spacing:.1em}
+.s-payoff{font-size:10.5px;letter-spacing:.06em;color:#444;margin-top:2px}
+.s-contatto{font-size:10.5px;color:#444;margin-top:4px}
+.s-riga{border-top:1px dashed #B5B5B5;margin:8px 0}
+.s-tipo{text-align:center;font-size:15px;line-height:1.2;margin:2px 0 12px}
+.s-tipo span{font-size:12px}
+.s-colonne{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.s-colonne span:nth-child(2){flex:0 0 2.2rem;text-align:center}
+.s-colonne span:last-child{flex:0 0 4.6rem;text-align:right}
+.s-totalone{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:17px;margin:6px 0 2px}
+.scontrino.stretto .s-totalone{font-size:15px}
+.s-pagamenti{margin-top:10px;font-size:12px}
+.s-pagamenti .r{color:#2A2A2A}
+.s-doc{text-align:center;font-size:12px;margin-top:14px;line-height:1.6}
+.s-riga-doppia{border-top:1px solid #151515;border-bottom:1px solid #151515;height:3px;margin:9px 0}
+.scontrino .r{display:flex;justify-content:space-between;gap:10px}
+.scontrino .r span:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.s-art{margin:5px 0}
+.s-art .d{word-break:break-word;flex:1}
+.s-art .s-colonne span:last-child{font-variant-numeric:tabular-nums}
+.s-unit{font-size:11.5px;color:#3A3A3A;margin-top:1px}
+.scontrino .tot{font-weight:700;font-size:15px;border-top:1px solid #151515;margin-top:7px;padding-top:7px}
+.s-canale{font-size:10.5px;color:#444;margin-top:5px}
+.s-grazie{text-align:center;font-size:11.5px;margin:9px 0 10px;font-weight:700}
+.s-barre{width:100%;height:38px;display:block;margin:0 auto}
+.s-codice{text-align:center;font-size:10.5px;letter-spacing:.22em;margin-top:2px}
+.s-pie{font-size:9.5px;color:#5A5A5A;text-align:center;margin-top:9px;line-height:1.4}
+input[type=file]{padding:.5rem;font-size:.86rem;background:#fff;border:1px dashed var(--riga);min-height:44px}
+.blocco-abb{background:var(--giallo-tint);border-radius:var(--r-s);padding:.9rem 1rem;margin-top:.9rem;font-size:.9rem;color:#6B4E00}
+.blocco-abb b{color:#4A3600}
+
+.pie-app{color:#7E9B9E;font-size:.8rem;text-align:center;padding:1.6rem 0 .5rem;line-height:1.5}
+@media print{
+  body>*{display:none!important}
+  #stampa{display:block!important}
+  #stampa .scontrino{box-shadow:none;clip-path:none;width:var(--carta,72mm);max-width:none;font-size:11px}
+  @page{margin:4mm}
+}
+#stampa{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="testa">
+    <span class="logo"><span class="m">C</span> Cartellino</span>
+    <span class="sp"></span>
+    <span class="pill">Anteprima</span>
+  </div>
+
+  <!-- ================= LAUNCHER ================= -->
+  <div class="schermata on" id="s-home">
+    <div class="launcher">
+      <h1>Che cosa ti serve?</h1>
+      <p class="sub">Scrivi un prezzo, un problema o il nome di uno strumento.</p>
+      <div class="cerca">
+        <svg class="lente" width="19" height="19" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6.2" fill="none" stroke="#7E9B9E" stroke-width="2"/><path d="M13.6 13.6L18 18" stroke="#7E9B9E" stroke-width="2"/></svg>
+        <label class="sr-only" for="q">Cerca uno strumento</label>
+        <input id="q" type="text" placeholder="prezzo, non vende, 45, magazzino..." autocomplete="off">
+        <kbd>/</kbd>
+      </div>
+      <button class="suggerito" id="suggerito" type="button"></button>
+    </div>
+
+    <div class="strumenti" id="griglia"></div>
+
+    <p class="pie-app">I dati restano su questo dispositivo, nel browser.<br>Nessun account, nessun server.</p>
+  </div>
+
+  <!-- ================= METRO ================= -->
+  <div class="schermata" id="s-metro">
+    <div class="barra">
+      <button class="indietro" data-home>← Strumenti</button>
+      <h2>Metro</h2>
+    </div>
+    <div class="foglio">
+      <div class="sez">
+        <h3>Quanto ti resta davvero</h3>
+        <div class="campi tre">
+          <label class="campo">Il tuo prezzo (€)<input type="number" id="m-prezzo" step="0.5" min="0" value="45"></label>
+          <label class="campo">Costo di acquisto (€)<input type="number" id="m-costo" step="0.5" min="0" value="8"></label>
+          <label class="campo">Spedizione stimata (€)<input type="number" id="m-sped" step="0.5" min="0" value="4.50"></label>
+        </div>
+        <p class="aiuto" style="margin-top:.7rem">La spedizione la paga il compratore: serve solo a capire quanto gli costa in tutto.</p>
+      </div>
+      <div class="sez">
+        <div class="numeroni">
+          <div class="dato"><div class="et">Incassi tu</div><div class="vl tab" id="m-incassi">45,00 €</div></div>
+          <div class="dato"><div class="et">Paga il cliente</div><div class="vl tab" id="m-cliente">51,75 €</div><div class="no" id="m-ricarico">+15%</div></div>
+          <div class="dato"><div class="et">Margine</div><div class="vl tab" id="m-margine">37,00 €</div><div class="no" id="m-molt">5,6×</div></div>
+        </div>
+        <div id="m-esito" class="esito buono" style="margin-top:.9rem"></div>
+        <div class="riga-conto" style="margin-top:1rem"><span>Protezione acquisti (0,70 € + 5%)</span><b class="tab" id="m-prot">2,95 €</b></div>
+        <div class="riga-conto"><span>Spedizione</span><b class="tab" id="m-sped-out">4,50 €</b></div>
+        <div class="riga-conto tot"><span>Totale per il cliente</span><b class="tab" id="m-tot">51,75 €</b></div>
+      </div>
+      <div class="sez">
+        <h3>Prezzo consigliato</h3>
+        <p class="aiuto">Su Vinted quasi tutti fanno un'offerta. Esponi più alto e concedi lo sconto: chi compra al volo ti lascia qualcosa in più.</p>
+        <div class="numeroni" style="margin-top:.8rem">
+          <div class="dato"><div class="et">Esponi a</div><div class="vl tab su" id="m-consigliato">50,00 €</div><div class="no">+12% di trattativa</div></div>
+          <div class="dato"><div class="et">Accetta fino a</div><div class="vl tab" id="m-minimo">45,00 €</div><div class="no">sotto ci rimetti tempo</div></div>
+          <div class="dato"><div class="et">Soglia filtro</div><div class="vl tab" id="m-soglia">50 €</div><div class="no" id="m-soglia-no">sei sopra: valuta 50</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DIAGNOSI ================= -->
+  <div class="schermata" id="s-diagnosi">
+    <div class="barra">
+      <button class="indietro" data-home>← Strumenti</button>
+      <h2>Diagnosi</h2>
+    </div>
+    <div class="foglio">
+      <div class="sez">
+        <h3>Perché questo articolo non vende</h3>
+        <div class="campi tre">
+          <label class="campo">Visualizzazioni<input type="number" id="d-viz" min="0" value="140"></label>
+          <label class="campo">Preferiti<input type="number" id="d-pref" min="0" value="18"></label>
+          <label class="campo">Giorni online<input type="number" id="d-gg" min="0" value="21"></label>
+        </div>
+      </div>
+      <div class="sez">
+        <div id="d-esito" class="esito"></div>
+        <div id="d-azioni" style="margin-top:.9rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ETICHETTA ================= -->
+  <div class="schermata" id="s-etichetta">
+    <div class="barra">
+      <button class="indietro" data-home>← Strumenti</button>
+      <h2>Etichetta</h2>
+    </div>
+    <div class="foglio">
+      <div class="sez">
+        <h3>Titolo e descrizione</h3>
+        <div class="campi due">
+          <label class="campo">Marca<input type="text" id="e-marca" value="Levi's" placeholder="Levi's"></label>
+          <label class="campo">Capo<input type="text" id="e-capo" value="Giacca di jeans" placeholder="Giacca di jeans"></label>
+          <label class="campo">Caratteristica<input type="text" id="e-cara" value="Type III anni 90" placeholder="vintage anni 90"></label>
+          <label class="campo">Taglia<input type="text" id="e-taglia" value="L" placeholder="L o W32 L34"></label>
+          <label class="campo">Colore<input type="text" id="e-colore" value="blu medio" placeholder="blu scuro"></label>
+          <label class="campo">Materiale<input type="text" id="e-mat" value="100% cotone" placeholder="100% cotone"></label>
+        </div>
+      </div>
+      <div class="sez">
+        <h3>Misure, prese col capo disteso</h3>
+        <div class="campi tre">
+          <label class="campo">Spalle (cm)<input type="number" id="e-spalle" value="46"></label>
+          <label class="campo">Petto (cm)<input type="number" id="e-petto" value="54"></label>
+          <label class="campo">Lunghezza (cm)<input type="number" id="e-lung" value="62"></label>
+          <label class="campo">Manica (cm)<input type="number" id="e-manica" value="60"></label>
+          <label class="campo">Vita (cm)<input type="number" id="e-vita" placeholder="solo pantaloni"></label>
+          <label class="campo">Gamba interna (cm)<input type="number" id="e-gamba" placeholder="solo pantaloni"></label>
+        </div>
+      </div>
+      <div class="sez">
+        <div class="campi due">
+          <label class="campo">Condizioni
+            <select id="e-cond">
+              <option>Nuovo con cartellino</option>
+              <option>Nuovo senza cartellino</option>
+              <option>Ottime condizioni</option>
+              <option selected>Buone condizioni</option>
+              <option>Discrete condizioni</option>
+            </select>
+          </label>
+          <label class="campo">Difetto da dichiarare<input type="text" id="e-difetto" placeholder="lieve ossidazione su un bottone"></label>
+        </div>
+        <p class="aiuto" style="margin-top:.7rem">Dichiarare un difetto piccolo aumenta le vendite: elimina i resi e ti fa credere sul resto.</p>
+      </div>
+      <div class="sez">
+        <h3>Pronto da copiare</h3>
+        <label class="campo" style="margin-bottom:.7rem">Titolo<input type="text" id="e-titolo" readonly></label>
+        <label class="campo">Descrizione<textarea id="e-desc" rows="12" readonly></textarea></label>
+        <div class="azioni">
+          <button class="btn" id="e-copia-titolo" type="button">Copia il titolo</button>
+          <button class="btn chiaro" id="e-copia-desc" type="button">Copia la descrizione</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ARMADIO ================= -->
+  <div class="schermata" id="s-armadio">
+    <div class="barra">
+      <button class="indietro" data-home>← Strumenti</button>
+      <h2>Armadio</h2>
+      <span class="sp"></span>
+    </div>
+    <div class="foglio">
+      <div class="sez">
+        <h3>Aggiungi un capo</h3>
+        <div class="campi due">
+          <label class="campo">Capo<input type="text" id="a-capo" placeholder="Giacca Levi's Type III"></label>
+          <label class="campo">Posizione<input type="text" id="a-pos" placeholder="Scatola 3, ripiano B"></label>
+          <label class="campo">Costo di acquisto (€)<input type="number" id="a-costo" step="0.5" min="0" placeholder="8"></label>
+          <label class="campo">Prezzo di vendita (€)<input type="number" id="a-prezzo" step="0.5" min="0" placeholder="45"></label>
+        </div>
+        <div class="azioni"><button class="btn" id="a-aggiungi" type="button">Aggiungi all'armadio</button></div>
+      </div>
+      <div class="sez">
+        <div class="numeroni">
+          <div class="dato"><div class="et">In magazzino</div><div class="vl tab" id="a-n">0</div></div>
+          <div class="dato"><div class="et">Capitale fermo</div><div class="vl tab" id="a-capitale">0,00 €</div><div class="no">costo dei capi non venduti</div></div>
+          <div class="dato"><div class="et">Valore a scaffale</div><div class="vl tab" id="a-valore">0,00 €</div><div class="no">se vendi tutto</div></div>
+        </div>
+      </div>
+      <div class="sez" style="padding-top:0">
+        <div class="scroller">
+          <table class="tabella" id="a-tabella">
+            <thead><tr><th>Cod.</th><th>Capo</th><th>Posizione</th><th>Costo</th><th>Prezzo</th><th>Stato</th><th></th></tr></thead>
+            <tbody id="a-righe"></tbody>
+          </table>
+        </div>
+        <div class="vuoto" id="a-vuoto">L'armadio è vuoto. Aggiungi il primo capo qui sopra.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= BILANCIA ================= -->
+  <div class="schermata" id="s-bilancia">
+    <div class="barra">
+      <button class="indietro" data-home>← Strumenti</button>
+      <h2>Bilancia</h2>
+    </div>
+    <div class="foglio">
+      <div class="sez">
+        <h3>Come sta andando</h3>
+        <p class="aiuto">I capi arrivano dall'Armadio. Aggiungi solo le ore che ci hai messo.</p>
+        <div class="campi due" style="margin-top:.8rem">
+          <label class="campo">Ore lavorate nel mese<input type="number" id="b-ore" min="0" step="1" value="20"></label>
+          <label class="campo">Vendite già fatte quest'anno<input type="number" id="b-anno" min="0" step="1" value="0"></label>
+        </div>
+      </div>
+      <div class="sez">
+        <div class="numeroni">
+          <div class="dato"><div class="et">Venduti</div><div class="vl tab" id="b-venduti">0</div><div class="no" id="b-tasso">tasso di vendita 0%</div></div>
+          <div class="dato"><div class="et">Margine</div><div class="vl tab" id="b-margine">0,00 €</div><div class="no" id="b-medio">0,00 € a capo</div></div>
+          <div class="dato"><div class="et">Ricavo orario</div><div class="vl tab" id="b-orario">0,00 €</div><div class="no">il numero che quasi nessuno calcola</div></div>
+        </div>
+        <div id="b-esito" class="esito" style="margin-top:.9rem"></div>
+      </div>
+      <div class="sez">
+        <h3>Soglie DAC7</h3>
+        <p class="aiuto">La piattaforma comunica i tuoi dati all'Agenzia delle Entrate oltre 30 transazioni oppure 2.000 € l'anno. Basta superarne una. Superarla non significa dover pagare tasse.</p>
+        <div class="numeroni" style="margin-top:.8rem">
+          <div class="dato"><div class="et">Transazioni</div><div class="vl tab" id="b-tx">0 / 30</div><div class="no" id="b-tx-no">sei sotto la soglia</div></div>
+          <div class="dato"><div class="et">Incassato</div><div class="vl tab" id="b-eur">0 € / 2.000</div><div class="no" id="b-eur-no">sei sotto la soglia</div></div>
+          <div class="dato"><div class="et">Stato</div><div class="vl" id="b-stato">Sotto</div><div class="no">calcolo sull'anno solare</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SCONTRINO ================= -->
+  <div class="schermata" id="s-scontrino">
+    <div class="barra">
+      <button class="indietro" data-home>← Strumenti</button>
+      <h2>Scontrino</h2>
+    </div>
+
+    <div class="scontrino-lavoro">
+      <div class="colonna-form">
+        <div class="foglio">
+          <div class="sez">
+            <div class="intesta-sez">
+              <h3>Il tuo negozio</h3>
+              <button class="btn chiaro piccolo" id="r-salva-brand" type="button">Salva</button>
+            </div>
+            <p class="aiuto">Si compila una volta sola e resta salvato.</p>
+            <div class="campi due" style="margin-top:.8rem">
+              <label class="campo">Nome<input type="text" id="b-nome" placeholder="Il nome del tuo armadio"></label>
+              <label class="campo">Sottotitolo<input type="text" id="b-payoff" placeholder="Vintage selezionato"></label>
+              <label class="campo">Contatto<input type="text" id="b-contatto" placeholder="@iltuoprofilo"></label>
+              <label class="campo">Citta<input type="text" id="b-citta" placeholder="Milano"></label>
+            </div>
+            <div class="campi due" style="margin-top:.8rem">
+              <label class="campo">Logo
+                <input type="file" id="b-logo" accept="image/*">
+              </label>
+              <label class="campo">Frase finale<input type="text" id="b-grazie" placeholder="Grazie, torna a trovarmi"></label>
+            </div>
+            <div class="azioni">
+              <button class="btn chiaro piccolo" id="b-logo-via" type="button">Togli il logo</button>
+              <span class="aiuto" id="b-logo-stato">Nessun logo caricato: uso le iniziali.</span>
+            </div>
+          </div>
+
+          <div class="sez">
+            <h3>Questa vendita</h3>
+            <div class="campi tre">
+              <label class="campo">Numero<input type="text" id="r-num" value="0001"></label>
+              <label class="campo">Data<input type="date" id="r-data"></label>
+              <label class="campo">Ora<input type="time" id="r-ora"></label>
+            </div>
+            <div class="campi due" style="margin-top:.8rem">
+              <label class="campo">Acquirente<input type="text" id="r-acq" placeholder="@acquirente"></label>
+            </div>
+
+            <h3 style="margin:1.1rem 0 .6rem">Articoli</h3>
+            <div id="r-righe"></div>
+            <div class="azioni">
+              <button class="btn chiaro piccolo" id="r-aggiungi" type="button">+ Aggiungi articolo</button>
+            </div>
+
+            <div class="campi tre" style="margin-top:1rem">
+              <label class="campo">Sconto lotto (€)<input type="number" id="r-sconto" step="0.5" min="0" value="0"></label>
+              <label class="campo">Spedizione (€)<input type="number" id="r-sped" step="0.5" min="0" value="4.50"></label>
+              <label class="campo">Come ha pagato
+                <select id="r-canale">
+                  <option>Vinted</option>
+                  <option>Consegna a mano</option>
+                  <option>Bonifico</option>
+                  <option>Altro</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="sez">
+            <div class="campi due">
+              <label class="campo">Formato di stampa
+                <select id="r-formato">
+                  <option value="80">Scontrino 80 mm</option>
+                  <option value="58">Scontrino 58 mm</option>
+                </select>
+              </label>
+              <label class="campo">Codice a barre
+                <select id="r-barre">
+                  <option value="si" selected>Mostralo</option>
+                  <option value="no">Senza</option>
+                </select>
+              </label>
+            </div>
+            <div class="azioni">
+              <button class="btn" id="r-stampa" type="button">Stampa o salva in PDF</button>
+              <button class="btn chiaro" id="r-png" type="button">Scarica immagine</button>
+              <button class="btn chiaro" id="r-copia" type="button">Copia il testo</button>
+            </div>
+            <p class="aiuto" id="r-nota-png" style="margin-top:.6rem"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="colonna-anteprima">
+        <div class="banco">
+          <div class="scontrino" id="scontrino">
+            <div class="s-testa">
+              <div class="s-logo" id="x-logo"><span id="x-iniziali">VS</span></div>
+              <div class="s-nome" id="x-nome">IL TUO ARMADIO</div>
+              <div class="s-payoff" id="x-payoff">vintage selezionato</div>
+              <div class="s-contatto" id="x-contatto">@iltuoprofilo</div>
+            </div>
+            <div class="s-tipo">RICEVUTA DI VENDITA<br><span>fra privati di bene usato</span></div>
+            <div class="s-colonne"><span>DESCRIZIONE</span><span>QTA</span><span>Prezzo(€)</span></div>
+            <div class="s-riga"></div>
+            <div id="x-articoli"></div>
+            <div class="s-riga"></div>
+            <div id="x-extra"></div>
+            <div class="s-totalone"><span>TOTALE COMPLESSIVO</span><span id="x-tot">0,00 €</span></div>
+            <div class="s-pagamenti" id="x-pagamenti"></div>
+            <div class="s-doc">
+              <div id="x-datetime">-</div>
+              <div>RICEVUTA N. <span id="x-num">0001</span></div>
+              <div id="x-acq-riga">Cliente <span id="x-acq">-</span></div>
+            </div>
+            <div class="s-riga-doppia"></div>
+            <div class="s-grazie" id="x-grazie">Grazie, torna a trovarmi</div>
+            <svg class="s-barre" id="x-barre" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"></svg>
+            <div class="s-codice" id="x-codice">*0001*</div>
+            <div class="s-pie">Ricevuta di vendita fra privati di bene usato.<br>Non valida ai fini fiscali.</div>
+          </div>
+        </div>
+        <div class="blocco-abb">
+          <b>Con l'abbonamento a 4,90 € al mese</b> le ricevute si salvano, il numero avanza da solo e le ritrovi quando ti servono. Qui puoi generarne quante vuoi, ma non restano.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div id="stampa"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- memoria ---------- */
+var SALVA_OSPITE=null;
+if(window.claude&&typeof window.claude.use==='function'){
+  try{window.claude.use('downloads').then(function(d){SALVA_OSPITE=d},function(){})}catch(e){}
+}
+var MEM={},STORAGE_OK=true;
+try{localStorage.setItem('cartellino.test','1');localStorage.removeItem('cartellino.test')}catch(e){STORAGE_OK=false}
+var DB={
+  get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return k in MEM?MEM[k]:d}},
+  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){MEM[k]=v}}
+};
+
+var $=function(id){return document.getElementById(id)};
+var eur=function(n){return (isFinite(n)?n:0).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'};
+var num=function(id){return parseFloat($(id).value)||0};
+
+/* ---------- strumenti ---------- */
+var STRUMENTI=[
+  {id:'metro',nome:'Metro',desc:'Quanto paga il cliente e quanto resta a te',chiavi:['prezzo','margine','guadagno','quanto','calcolo','protezione','sconto','commissione'],
+   ico:'<path d="M3 8h22v12H3z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><path d="M8 8v4M13 8v6M18 8v4M23 8v6" stroke="#5FD3D8" stroke-width="1.8"/>'},
+  {id:'diagnosi',nome:'Diagnosi',desc:'Perché un articolo resta fermo',chiavi:['non vende','fermo','diagnosi','visualizzazioni','preferiti','nessuno compra','problema'],
+   ico:'<circle cx="12" cy="12" r="7" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><path d="M17 17l6 6" stroke="#5FD3D8" stroke-width="1.8"/><path d="M12 8.5v4M12 15.2v.2" stroke="#5FD3D8" stroke-width="1.8"/>'},
+  {id:'etichetta',nome:'Etichetta',desc:'Titolo e descrizione pronti da copiare',chiavi:['descrizione','titolo','scheda','testo','inserzione','misure','etichetta'],
+   ico:'<path d="M4 6h13l7 8-7 8H4z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><circle cx="8.5" cy="14" r="1.6" fill="#5FD3D8"/>'},
+  {id:'armadio',nome:'Armadio',desc:'Magazzino: dove sta e quanto ti è costato',chiavi:['magazzino','armadio','inventario','capi','stock','registro','dove'],
+   ico:'<path d="M6 4h16v20H6z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><path d="M14 4v20" stroke="#5FD3D8" stroke-width="1.8"/><path d="M11 13v2M17 13v2" stroke="#5FD3D8" stroke-width="1.8"/>'},
+  {id:'bilancia',nome:'Bilancia',desc:'Conti del mese e soglie fiscali',chiavi:['conti','bilancio','soglie','dac7','fisco','tasse','ricavo','statistiche','orario'],
+   ico:'<path d="M14 4v18" stroke="#5FD3D8" stroke-width="1.8"/><path d="M6 22h16" stroke="#5FD3D8" stroke-width="1.8"/><path d="M4 9h20" stroke="#5FD3D8" stroke-width="1.8"/><path d="M4 9l-2 6h4zM24 9l-2 6h4z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/>'},
+  {id:'scontrino',nome:'Scontrino',desc:'Ricevuta di vendita fra privati',chiavi:['scontrino','ricevuta','fattura','documento','prova'],badge:'Abbonamento',
+   ico:'<path d="M7 3h14v22l-2.3-1.8L16.4 25l-2.4-1.8L11.6 25l-2.3-1.8L7 25z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><path d="M11 9h6M11 13h6" stroke="#5FD3D8" stroke-width="1.8"/>'}
+];
+
+var griglia=$('griglia');
+STRUMENTI.forEach(function(s){
+  var b=document.createElement('button');
+  b.className='stru'; b.type='button'; b.dataset.id=s.id;
+  b.innerHTML='<span class="ico"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">'+s.ico+'</svg></span>'+
+    (s.badge?'<span class="badge">'+s.badge+'</span>':'')+
+    '<h3>'+s.nome+'</h3><p>'+s.desc+'</p>';
+  b.addEventListener('click',function(){vai(s.id)});
+  griglia.appendChild(b);
+});
+
+/* ---------- navigazione ---------- */
+function vai(id){
+  document.querySelectorAll('.schermata').forEach(function(s){s.classList.remove('on')});
+  $('s-'+id).classList.add('on');
+  window.scrollTo(0,0);
+  if(id==='armadio') disegnaArmadio();
+  if(id==='bilancia') calcolaBilancia();
+  location.hash=id==='home'?'':id;
+}
+function casa(){vai('home')}
+document.querySelectorAll('[data-home]').forEach(function(b){b.addEventListener('click',casa)});
+window.addEventListener('hashchange',function(){
+  var h=location.hash.replace('#','');
+  vai(STRUMENTI.some(function(s){return s.id===h})?h:'home');
+});
+
+/* ---------- ricerca ---------- */
+var q=$('q'), sugg=$('suggerito');
+function filtra(){
+  var v=q.value.trim().toLowerCase();
+  var numero=parseFloat(v.replace(',','.'));
+  if(v && isFinite(numero) && /^[\d.,\s€]+$/.test(v)){
+    sugg.classList.add('on');
+    sugg.innerHTML='Calcola margine e totale cliente per <strong>'+numero.toString().replace('.',',')+' €</strong><span class="frecc">→</span>';
+    sugg.onclick=function(){$('m-prezzo').value=numero;calcolaMetro();vai('metro')};
+  } else sugg.classList.remove('on');
+
+  document.querySelectorAll('.stru').forEach(function(b){
+    var s=STRUMENTI.filter(function(x){return x.id===b.dataset.id})[0];
+    var testo=(s.nome+' '+s.desc+' '+s.chiavi.join(' ')).toLowerCase();
+    b.hidden = v.length>1 && !isFinite(numero) && testo.indexOf(v)<0;
+  });
+}
+q.addEventListener('input',filtra);
+q.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    if(sugg.classList.contains('on')){sugg.click();return}
+    var primo=Array.prototype.filter.call(document.querySelectorAll('.stru'),function(b){return !b.hidden})[0];
+    if(primo) primo.click();
+  }
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='/' && document.activeElement!==q && !/input|textarea|select/i.test(document.activeElement.tagName)){
+    e.preventDefault(); casa(); q.focus();
+  }
+  if(e.key==='Escape') casa();
+});
+
+/* ---------- METRO ---------- */
+var SOGLIE=[10,15,20,25,30,50,75,100];
+function calcolaMetro(){
+  var p=num('m-prezzo'), c=num('m-costo'), sp=num('m-sped');
+  var prot=p>0?0.70+p*0.05:0, tot=p+prot+sp, marg=p-c;
+  $('m-incassi').textContent=eur(p);
+  $('m-cliente').textContent=eur(tot);
+  $('m-ricarico').textContent=p>0?'+'+Math.round((tot-p)/p*100)+'% sul tuo prezzo':'';
+  $('m-margine').textContent=eur(marg);
+  $('m-margine').className='vl tab '+(marg<=0?'giu':marg>=12?'su':'');
+  var molt=c>0?(p/c):0;
+  $('m-molt').textContent=c>0?molt.toFixed(1).replace('.',',')+'× il costo':'nessun costo di acquisto';
+  $('m-prot').textContent=eur(prot);
+  $('m-sped-out').textContent=eur(sp);
+  $('m-tot').textContent=eur(tot);
+
+  var e=$('m-esito'), cl='buono', tit='Il conto regge', txt='';
+  if(p<=0){cl='attenzione';tit='Metti un prezzo';txt='Inserisci il prezzo che vuoi esporre.';}
+  else if(p<10){cl='male';tit='Sotto i 10 € lavori gratis';
+    txt='Il cliente paga '+eur(tot)+', più del doppio di quello che incassi tu, e a te restano '+eur(marg)+' per quindici minuti di lavoro fra foto, scheda e imballaggio. Meglio metterlo in un lotto.';}
+  else if(c>0&&molt<3){cl='male';tit='Margine troppo stretto';
+    txt='Stai vendendo a '+molt.toFixed(1).replace('.',',')+'× il costo. Sotto 3× il tempo non è pagato: fra capi invenduti, lavaggio e imballaggio il margine sparisce. La regola è comprare a un quarto del prezzo di vendita.';}
+  else if(c>0&&molt<4){cl='attenzione';tit='Ci siamo quasi';
+    txt='A '+molt.toFixed(1).replace('.',',')+'× il costo ci guadagni, ma poco. Con 4× copri anche i capi che non si venderanno mai.';}
+  else{cl='buono';tit='Il conto regge';
+    txt='Margine di '+eur(marg)+' a capo'+(c>0?' e '+molt.toFixed(1).replace('.',',')+'× il costo di acquisto':'')+'. Il cliente paga '+eur(tot)+' in tutto.';}
+  e.className='esito '+cl;
+  e.innerHTML='<div class="titolo">'+tit+'</div><p>'+txt+'</p>';
+
+  var cons=Math.round(p*1.12*2)/2;
+  $('m-consigliato').textContent=eur(cons);
+  $('m-minimo').textContent=eur(p);
+  var sopra=null;
+  for(var i=0;i<SOGLIE.length;i++){if(p>SOGLIE[i]&&p<=SOGLIE[i]*1.12){sopra=SOGLIE[i];break}}
+  $('m-soglia').textContent=sopra?sopra+' €':'ok';
+  $('m-soglia-no').textContent=sopra
+    ? 'sei appena sopra: chi filtra fino a '+sopra+' € non ti vede'
+    : 'non sei appena sopra una soglia di ricerca';
+}
+['m-prezzo','m-costo','m-sped'].forEach(function(id){$(id).addEventListener('input',calcolaMetro)});
+calcolaMetro();
+
+/* ---------- DIAGNOSI ---------- */
+function calcolaDiagnosi(){
+  var v=num('d-viz'), pr=num('d-pref'), gg=num('d-gg');
+  var e=$('d-esito'), a=$('d-azioni'), cl='attenzione', tit='', txt='', lista=[];
+  var rapporto=v>0?pr/v:0;
+
+  if(v<20&&gg>=7){cl='male';tit='Non ti trovano';
+    txt='Con '+v+' visualizzazioni in '+gg+' giorni il problema non è il capo: è che l\'inserzione non compare nelle ricerche.';
+    lista=['Rifai il titolo: marca, tipo di capo, caratteristica, taglia, colore, in quest\'ordine.',
+      'Compila tutti i campi strutturati, soprattutto la marca: chi filtra per marca non ti vede se è vuota.',
+      'Pubblica di sera, fra le 20 e le 23, quando il traffico è massimo.'];}
+  else if(rapporto>=0.12&&pr>=8){cl='attenzione';tit='Piace, ma il prezzo frena';
+    txt='Un preferito ogni '+Math.round(1/rapporto)+' visualizzazioni è un ottimo segnale: l\'articolo piace. Chi lo salva sta aspettando che costi meno.';
+    lista=['Riduci del 10-15%: chi lo ha nei preferiti riceve la notifica del ribasso.',
+      'Prima del taglio, controlla di non essere appena sopra una soglia di filtro.',
+      'Se non vuoi scendere, aspetta: i preferiti lavorano per te.'];}
+  else if(v>=60&&rapporto<0.05){cl='male';tit='Lo vedono e scorrono via';
+    txt='Tante visualizzazioni ('+v+') e pochi preferiti ('+pr+'): la miniatura non convince. Il problema è la prima foto.';
+    lista=['Rifai la prima foto: luce naturale di giorno, sfondo neutro, capo che riempie l\'inquadratura.',
+      'Fai tre scatti frontali e scegli il migliore, invece di tenere il primo.',
+      'Aggiungi le misure reali: senza, molti non arrivano nemmeno a chiedere.'];}
+  else if(gg<7){cl='buono';tit='È presto per giudicare';
+    txt='L\'articolo è online da '+gg+' giorni. Il picco di visibilità dura le prime 48 ore, poi vive di ricerca: dagli almeno due settimane prima di intervenire.';
+    lista=['Continua a pubblicare ogni giorno: il profilo attivo resta nel flusso dei nuovi arrivi.',
+      'Ricontrolla fra una settimana con questi stessi numeri.'];}
+  else{cl='attenzione';tit='Segnali deboli su tutta la linea';
+    txt='Con '+v+' visualizzazioni e '+pr+' preferiti in '+gg+' giorni non c\'è un colpevole solo: l\'inserzione è mediocre in più punti.';
+    lista=['Ripubblica: elimina e ricrea, così torna in cima ai nuovi arrivi.',
+      'Approfittane per rifare foto e titolo insieme.',
+      'Se dopo tre settimane non si muove niente, il problema è la nicchia, non il capo.'];}
+
+  e.className='esito '+cl;
+  e.innerHTML='<div class="titolo">'+tit+'</div><p>'+txt+'</p>';
+  a.innerHTML='<h3 style="margin-bottom:.6rem">Cosa fare adesso</h3>'+
+    lista.map(function(x){return '<div class="riga-conto"><span>'+x+'</span></div>'}).join('');
+}
+['d-viz','d-pref','d-gg'].forEach(function(id){$(id).addEventListener('input',calcolaDiagnosi)});
+calcolaDiagnosi();
+
+/* ---------- ETICHETTA ---------- */
+function componiEtichetta(){
+  var g=function(id){return ($(id).value||'').trim()};
+  var titolo=[g('e-marca'),g('e-capo'),g('e-cara'),g('e-taglia'),g('e-colore')].filter(Boolean).join(' ');
+  var mis=[];
+  if(g('e-spalle'))mis.push('Spalle '+g('e-spalle')+' cm');
+  if(g('e-petto'))mis.push('Petto '+g('e-petto')+' cm');
+  if(g('e-lung'))mis.push('Lunghezza '+g('e-lung')+' cm');
+  if(g('e-manica'))mis.push('Manica '+g('e-manica')+' cm');
+  if(g('e-vita'))mis.push('Vita '+g('e-vita')+' cm');
+  if(g('e-gamba'))mis.push('Gamba interna '+g('e-gamba')+' cm');
+  var cond=$('e-cond').value, dif=g('e-difetto');
+  var righe=[];
+  righe.push([g('e-marca'),g('e-capo'),g('e-cara')].filter(Boolean).join(' ')+
+    (g('e-mat')?', '+g('e-mat').toLowerCase():'')+(g('e-colore')?'. Colore '+g('e-colore')+'.':'.'));
+  righe.push('');
+  if(mis.length){righe.push('MISURE (capo disteso):');righe.push(mis.join(' · '));righe.push('')}
+  righe.push('CONDIZIONI: '+cond.toLowerCase()+'.'+(dif?' '+dif.charAt(0).toUpperCase()+dif.slice(1)+', visibile nelle foto.':' Nessun difetto da segnalare.'));
+  righe.push('');
+  if(g('e-mat')){righe.push('COMPOSIZIONE: '+g('e-mat')+'.');righe.push('')}
+  righe.push('Spedizione entro 24 ore dall\'acquisto. Sconto sull\'acquisto di più capi.');
+  $('e-titolo').value=titolo;
+  $('e-desc').value=righe.join('\n');
+}
+['e-marca','e-capo','e-cara','e-taglia','e-colore','e-mat','e-spalle','e-petto','e-lung','e-manica','e-vita','e-gamba','e-cond','e-difetto']
+  .forEach(function(id){$(id).addEventListener('input',componiEtichetta);$(id).addEventListener('change',componiEtichetta)});
+componiEtichetta();
+$('e-copia-titolo').addEventListener('click',function(){copia($('e-titolo').value,this,'Copia il titolo')});
+$('e-copia-desc').addEventListener('click',function(){copia($('e-desc').value,this,'Copia la descrizione')});
+
+function copia(t,btn,orig){
+  var ok=function(){btn.textContent='Copiato';setTimeout(function(){btn.textContent=orig},1600)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){fb(t,ok)})}
+  else fb(t,ok);
+}
+function fb(t,ok){var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(e){window.prompt('Copia:',t)}
+  document.body.removeChild(ta)}
+
+/* ---------- ARMADIO ---------- */
+var CAPI=DB.get('cartellino.capi',[]);
+function salvaCapi(){DB.set('cartellino.capi',CAPI)}
+function codice(n){return 'A-'+String(n).padStart(3,'0')}
+$('a-aggiungi').addEventListener('click',function(){
+  var capo=($('a-capo').value||'').trim();
+  if(!capo){$('a-capo').focus();return}
+  CAPI.push({id:Date.now(),n:CAPI.length+1,capo:capo,pos:($('a-pos').value||'').trim(),
+    costo:num('a-costo'),prezzo:num('a-prezzo'),stato:'online'});
+  salvaCapi();
+  ['a-capo','a-pos','a-costo','a-prezzo'].forEach(function(id){$(id).value=''});
+  $('a-capo').focus();
+  disegnaArmadio();
+});
+function disegnaArmadio(){
+  var tb=$('a-righe'); tb.innerHTML='';
+  $('a-vuoto').style.display=CAPI.length?'none':'block';
+  $('a-tabella').style.display=CAPI.length?'table':'none';
+  var fermi=0,cap=0,val=0;
+  CAPI.forEach(function(c){
+    if(c.stato!=='venduto'){fermi++;cap+=c.costo;val+=c.prezzo}
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td class="tab">'+codice(c.n)+'</td><td>'+esc(c.capo)+'</td><td>'+(esc(c.pos)||'<span style="color:var(--ink-3)">—</span>')+
+      '</td><td class="tab">'+eur(c.costo)+'</td><td class="tab">'+eur(c.prezzo)+'</td>'+
+      '<td><select class="stato-sel" data-id="'+c.id+'" style="min-height:34px;padding:.2rem .4rem;font-size:.82rem">'+
+      ['online','venduto','da lavorare'].map(function(s){return '<option'+(c.stato===s?' selected':'')+'>'+s+'</option>'}).join('')+
+      '</select></td><td><button class="elimina" data-del="'+c.id+'" aria-label="Elimina"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2"/></svg></button></td>';
+    tb.appendChild(tr);
+  });
+  $('a-n').textContent=fermi;
+  $('a-capitale').textContent=eur(cap);
+  $('a-valore').textContent=eur(val);
+  tb.querySelectorAll('[data-del]').forEach(function(b){
+    b.addEventListener('click',function(){
+      CAPI=CAPI.filter(function(x){return x.id!=b.dataset.del});
+      CAPI.forEach(function(c,i){c.n=i+1});
+      salvaCapi();disegnaArmadio();
+    });
+  });
+  tb.querySelectorAll('.stato-sel').forEach(function(s){
+    s.addEventListener('change',function(){
+      CAPI.forEach(function(c){if(c.id==s.dataset.id)c.stato=s.value});
+      salvaCapi();disegnaArmadio();
+    });
+  });
+}
+function esc(t){return String(t||'').replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]})}
+disegnaArmadio();
+
+/* ---------- BILANCIA ---------- */
+function calcolaBilancia(){
+  var venduti=CAPI.filter(function(c){return c.stato==='venduto'});
+  var online=CAPI.length;
+  var ricavi=0,costi=0;
+  venduti.forEach(function(c){ricavi+=c.prezzo;costi+=c.costo});
+  var marg=ricavi-costi, ore=num('b-ore');
+  $('b-venduti').textContent=venduti.length;
+  $('b-tasso').textContent='tasso di vendita '+(online?Math.round(venduti.length/online*100):0)+'%';
+  $('b-margine').textContent=eur(marg);
+  $('b-medio').textContent=venduti.length?eur(marg/venduti.length)+' a capo':'nessuna vendita registrata';
+  var orario=ore>0?marg/ore:0;
+  $('b-orario').textContent=eur(orario);
+  $('b-orario').className='vl tab '+(orario>=15?'su':orario>0?'giu':'');
+
+  var e=$('b-esito');
+  if(!venduti.length){
+    e.className='esito attenzione';
+    e.innerHTML='<div class="titolo">Ancora nessuna vendita registrata</div><p>Nell\'Armadio metti i capi su “venduto” quando li vendi: da lì arrivano tutti i numeri di questa schermata.</p>';
+  } else if(orario<12){
+    e.className='esito male';
+    e.innerHTML='<div class="titolo">Stai lavorando sotto costo</div><p>'+eur(orario)+' l\'ora lordi, prima di tasse e contributi. O alzi i prezzi, o riduci il tempo per capo lavorando in blocco, o cambi nicchia.</p>';
+  } else {
+    e.className='esito buono';
+    e.innerHTML='<div class="titolo">I conti tornano</div><p>'+eur(orario)+' l\'ora lordi su '+ore+' ore. È il numero da guardare ogni mese: se scende mentre il fatturato sale, stai crescendo nel modo sbagliato.</p>';
+  }
+
+  var tx=venduti.length+ (parseInt($('b-anno').value)||0);
+  var incassato=ricavi;
+  $('b-tx').textContent=tx+' / 30';
+  $('b-eur').textContent=Math.round(incassato)+' € / 2.000';
+  var oltre=tx>30||incassato>2000;
+  $('b-tx-no').textContent=tx>30?'soglia superata':'sotto la soglia';
+  $('b-eur-no').textContent=incassato>2000?'soglia superata':'sotto la soglia';
+  $('b-stato').textContent=oltre?'Segnalato':'Sotto';
+  $('b-stato').className='vl '+(oltre?'giu':'su');
+}
+['b-ore','b-anno'].forEach(function(id){$(id).addEventListener('input',calcolaBilancia)});
+calcolaBilancia();
+
+/* ---------- SCONTRINO ---------- */
+var BRAND=DB.get('cartellino.brand',{nome:'',payoff:'',contatto:'',citta:'',grazie:'',logo:''});
+var ARTICOLI=[{d:'Giacca di jeans Levi\'s Type III',q:1,p:45}];
+
+function caricaBrand(){
+  $('b-nome').value=BRAND.nome||''; $('b-payoff').value=BRAND.payoff||'';
+  $('b-contatto').value=BRAND.contatto||''; $('b-citta').value=BRAND.citta||'';
+  $('b-grazie').value=BRAND.grazie||'';
+  $('b-logo-stato').textContent=BRAND.logo?'Logo caricato.':'Nessun logo caricato: uso le iniziali.';
+}
+caricaBrand();
+
+$('r-salva-brand').addEventListener('click',function(){
+  BRAND.nome=$('b-nome').value.trim(); BRAND.payoff=$('b-payoff').value.trim();
+  BRAND.contatto=$('b-contatto').value.trim(); BRAND.citta=$('b-citta').value.trim();
+  BRAND.grazie=$('b-grazie').value.trim();
+  DB.set('cartellino.brand',BRAND);
+  var b=this,o=b.textContent; b.textContent=STORAGE_OK?'Salvato':'Solo per ora';
+  setTimeout(function(){b.textContent=o},1600);
+  disegnaScontrino();
+});
+$('b-logo').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f)return;
+  if(f.size>400*1024){$('b-logo-stato').textContent='Immagine troppo pesante: massimo 400 KB.';return}
+  var fr=new FileReader();
+  fr.onload=function(){
+    BRAND.logo=fr.result; DB.set('cartellino.brand',BRAND);
+    $('b-logo-stato').textContent='Logo caricato.'; disegnaScontrino();
+  };
+  fr.readAsDataURL(f);
+});
+$('b-logo-via').addEventListener('click',function(){
+  BRAND.logo=''; DB.set('cartellino.brand',BRAND);
+  $('b-logo').value=''; $('b-logo-stato').textContent='Nessun logo caricato: uso le iniziali.';
+  disegnaScontrino();
+});
+['b-nome','b-payoff','b-contatto','b-citta','b-grazie'].forEach(function(id){
+  $(id).addEventListener('input',function(){
+    BRAND[id.replace('b-','')==='payoff'?'payoff':id.replace('b-','')]=$(id).value;
+    disegnaScontrino();
+  });
+});
+
+/* righe articolo */
+function disegnaRighe(){
+  var c=$('r-righe'); c.innerHTML='';
+  ARTICOLI.forEach(function(a,i){
+    var d=document.createElement('div');
+    d.className='campi'; d.style.gridTemplateColumns='1fr 4.2rem 5.4rem 2.4rem';
+    d.style.gap='.5rem'; d.style.alignItems='end'; d.style.marginBottom='.5rem';
+    d.innerHTML='<label class="campo">'+(i===0?'Descrizione':'')+'<input type="text" data-k="d" data-i="'+i+'" value="'+esc(a.d)+'" placeholder="Capo"></label>'+
+      '<label class="campo">'+(i===0?'Qta':'')+'<input type="number" min="1" step="1" data-k="q" data-i="'+i+'" value="'+a.q+'"></label>'+
+      '<label class="campo">'+(i===0?'Prezzo (€)':'')+'<input type="number" min="0" step="0.5" data-k="p" data-i="'+i+'" value="'+a.p+'"></label>'+
+      '<button class="elimina" data-rm="'+i+'" aria-label="Togli riga" style="min-height:46px"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2"/></svg></button>';
+    c.appendChild(d);
+  });
+  c.querySelectorAll('input').forEach(function(inp){
+    inp.addEventListener('input',function(){
+      var i=+inp.dataset.i,k=inp.dataset.k;
+      ARTICOLI[i][k]= k==='d'?inp.value:(parseFloat(inp.value)||0);
+      disegnaScontrino();
+    });
+  });
+  c.querySelectorAll('[data-rm]').forEach(function(b){
+    b.addEventListener('click',function(){
+      if(ARTICOLI.length<2)return;
+      ARTICOLI.splice(+b.dataset.rm,1); disegnaRighe(); disegnaScontrino();
+    });
+  });
+}
+$('r-aggiungi').addEventListener('click',function(){
+  ARTICOLI.push({d:'',q:1,p:0}); disegnaRighe(); disegnaScontrino();
+  var ins=$('r-righe').querySelectorAll('input[data-k="d"]');
+  if(ins.length) ins[ins.length-1].focus();
+});
+disegnaRighe();
+
+var oggi=new Date();
+$('r-data').value=oggi.getFullYear()+'-'+String(oggi.getMonth()+1).padStart(2,'0')+'-'+String(oggi.getDate()).padStart(2,'0');
+$('r-ora').value=String(oggi.getHours()).padStart(2,'0')+':'+String(oggi.getMinutes()).padStart(2,'0');
+function dataIt(v){if(!v)return '-';var p=v.split('-');return p[2]+'/'+p[1]+'/'+p[0]}
+
+function totali(){
+  var merce=0; ARTICOLI.forEach(function(a){merce+=(a.q||0)*(a.p||0)});
+  var sconto=num('r-sconto'), sped=num('r-sped');
+  return {merce:merce,sconto:sconto,sped:sped,tot:Math.max(0,merce-sconto)+sped};
+}
+
+/* codice a barre Code 39, disegnato a mano */
+var C39={'0':'nnnwwnwnn','1':'wnnwnnnnw','2':'nnwwnnnnw','3':'wnwwnnnnn','4':'nnnwwnnnw',
+'5':'wnnwwnnnn','6':'nnwwwnnnn','7':'nnnwnnwnw','8':'wnnwnnwnn','9':'nnwwnnwnn','-':'nnnwnnwwn','*':'nnnwnwwnn'};
+function barre(testo){
+  var svg=$('x-barre');
+  if($('r-barre').value==='no'){svg.style.display='none';$('x-codice').style.display='none';return}
+  svg.style.display='block';$('x-codice').style.display='block';
+  var seq='*'+String(testo).toUpperCase().replace(/[^0-9A-Z\-]/g,'')+'*';
+  var larghezze=[];
+  for(var i=0;i<seq.length;i++){
+    var pattern=C39[seq[i]]; if(!pattern){continue}
+    for(var j=0;j<9;j++) larghezze.push(pattern[j]==='w'?3:1);
+    larghezze.push(1);
+  }
+  var totale=larghezze.reduce(function(a,b){return a+b},0);
+  var x=0,d='';
+  larghezze.forEach(function(w,idx){
+    if(idx%2===0) d+='M'+(x/totale*200).toFixed(2)+' 0h'+(w/totale*200).toFixed(2)+'v40h-'+(w/totale*200).toFixed(2)+'z';
+    x+=w;
+  });
+  svg.innerHTML='<path d="'+d+'" fill="#151515"/>';
+  $('x-codice').textContent='*'+seq.slice(1,-1)+'*';
+}
+
+function disegnaScontrino(){
+  var t=totali();
+  var nome=(BRAND.nome||'Il tuo armadio').toUpperCase();
+  $('x-nome').textContent=nome;
+  $('x-payoff').textContent=BRAND.payoff||'';
+  $('x-payoff').style.display=BRAND.payoff?'block':'none';
+  var contatto=[BRAND.contatto,BRAND.citta].filter(Boolean).join(' · ');
+  $('x-contatto').textContent=contatto;
+  $('x-contatto').style.display=contatto?'block':'none';
+
+  var logo=$('x-logo');
+  if(BRAND.logo){ logo.innerHTML='<img src="'+BRAND.logo+'" alt="">'; }
+  else{
+    var ini=nome.split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w[0]}).join('')||'VS';
+    logo.innerHTML='<span>'+esc(ini)+'</span>';
+  }
+
+  $('x-num').textContent=$('r-num').value||'-';
+  $('x-acq').textContent=$('r-acq').value||'-';
+
+  var art=$('x-articoli'); art.innerHTML='';
+  ARTICOLI.forEach(function(a){
+    if(!a.d&&!a.p)return;
+    var riga=document.createElement('div'); riga.className='s-art';
+    riga.innerHTML='<div class="s-colonne"><span class="d">'+esc((a.d||'Articolo').toUpperCase())+'</span>'+
+      '<span>'+(a.q||1)+'</span><span>'+eur((a.q||1)*(a.p||0)).replace(' €','')+'</span></div>'+
+      ((a.q||1)>1?'<div class="s-unit">'+(a.q||1)+' x '+eur(a.p||0)+'</div>':'');
+    art.appendChild(riga);
+  });
+
+  var ex=$('x-extra'); ex.innerHTML='';
+  function rigaEx(et,val){var d=document.createElement('div');d.className='r';
+    d.innerHTML='<span>'+et+'</span><span>'+val+'</span>';ex.appendChild(d)}
+  rigaEx('Merce',eur(t.merce));
+  if(t.sconto>0) rigaEx('Sconto lotto','-'+eur(t.sconto));
+  rigaEx('Spedizione',eur(t.sped));
+  $('x-tot').textContent=eur(t.tot);
+
+  var canale=$('r-canale').value, contante=canale==='Consegna a mano'?t.tot:0;
+  var pg=$('x-pagamenti'); pg.innerHTML='';
+  function rigaPg(et,val){var d=document.createElement('div');d.className='r';
+    d.innerHTML='<span>'+et+'</span><span>'+val+'</span>';pg.appendChild(d)}
+  rigaPg('Pagamento contante',eur(contante));
+  rigaPg('Pagamento elettronico',eur(t.tot-contante));
+  rigaPg('Non riscosso',eur(0));
+  rigaPg('Resto',eur(0));
+  rigaPg('Importo pagato',eur(t.tot));
+  rigaPg('Canale',canale);
+
+  var dt=$('r-data').value?dataIt($('r-data').value):'-';
+  var ora=$('r-ora').value||'';
+  $('x-datetime').textContent=dt+(ora?'   '+ora:'');
+  var acq=$('r-acq').value.trim();
+  $('x-acq').textContent=acq||'-';
+  $('x-acq-riga').style.display=acq?'block':'none';
+  $('x-grazie').textContent=BRAND.grazie||'Grazie';
+  $('x-grazie').style.display=(BRAND.grazie||'Grazie')?'block':'none';
+
+  var stretto=$('r-formato').value==='58';
+  $('scontrino').classList.toggle('stretto',stretto);
+  barre($('r-num').value||'0001');
+}
+['r-num','r-data','r-ora','r-acq','r-sconto','r-sped','r-canale','r-formato','r-barre']
+  .forEach(function(id){$(id).addEventListener('input',disegnaScontrino);$(id).addEventListener('change',disegnaScontrino)});
+disegnaScontrino();
+
+function testoScontrino(){
+  var t=totali(),r=[];
+  r.push((BRAND.nome||'Il tuo armadio').toUpperCase());
+  if(BRAND.payoff)r.push(BRAND.payoff);
+  if(BRAND.contatto||BRAND.citta)r.push([BRAND.contatto,BRAND.citta].filter(Boolean).join(' · '));
+  r.push('');
+  r.push('Ricevuta n. '+$('r-num').value+'  del '+dataIt($('r-data').value));
+  r.push('Acquirente: '+($('r-acq').value||'-'));
+  r.push('');
+  ARTICOLI.forEach(function(a){ if(!a.d&&!a.p)return;
+    r.push((a.d||'Articolo')+'  '+(a.q||1)+' x '+eur(a.p||0)+' = '+eur((a.q||1)*(a.p||0)));});
+  r.push('');
+  r.push('Merce: '+eur(t.merce));
+  if(t.sconto>0)r.push('Sconto lotto: -'+eur(t.sconto));
+  r.push('Spedizione: '+eur(t.sped));
+  r.push('TOTALE: '+eur(t.tot));
+  r.push('Pagato con: '+$('r-canale').value);
+  r.push('');
+  if(BRAND.grazie)r.push(BRAND.grazie);
+  r.push('Ricevuta di vendita fra privati di bene usato. Non valida ai fini fiscali.');
+  return r.join('\n');
+}
+
+$('r-stampa').addEventListener('click',function(){
+  var a=$('stampa'); a.innerHTML='';
+  a.style.setProperty('--carta',$('r-formato').value==='58'?'52mm':'72mm');
+  a.appendChild($('scontrino').cloneNode(true));
+  window.print();
+});
+$('r-copia').addEventListener('click',function(){copia(testoScontrino(),this,'Copia il testo')});
+
+/* immagine da allegare in chat */
+$('r-png').addEventListener('click',function(){
+  var btn=this, sc=$('scontrino'), scala=3;
+  var largh=$('r-formato').value==='58'?224:304;
+  var cv=document.createElement('canvas');
+  var ctx=cv.getContext('2d');
+  var t=totali(), stretto=$('r-formato').value==='58';
+  var F=stretto?11:12, pad=16, y=0;
+  var righe=[];
+  function push(tipo,a,b){righe.push({tipo:tipo,a:a,b:b})}
+  push('logo');
+  push('nome',(BRAND.nome||'Il tuo armadio').toUpperCase());
+  if(BRAND.payoff)push('piccolo',BRAND.payoff);
+  var cont=[BRAND.contatto,BRAND.citta].filter(Boolean).join(' · ');
+  if(cont)push('piccolo',cont);
+  push('doppia');
+  push('coppia','Ricevuta n.',$('r-num').value||'-');
+  push('coppia','Data',dataIt($('r-data').value));
+  push('coppia','Acquirente',$('r-acq').value||'-');
+  push('trat');
+  ARTICOLI.forEach(function(a){ if(!a.d&&!a.p)return;
+    push('desc',a.d||'Articolo');
+    push('coppia',(a.q||1)+' x '+eur(a.p||0),eur((a.q||1)*(a.p||0)));});
+  push('trat');
+  push('coppia','Merce',eur(t.merce));
+  if(t.sconto>0)push('coppia','Sconto lotto','-'+eur(t.sconto));
+  push('coppia','Spedizione',eur(t.sped));
+  push('totale','TOTALE',eur(t.tot));
+  push('coppia','Pagato con',$('r-canale').value);
+  push('doppia');
+  if(BRAND.grazie)push('grazie',BRAND.grazie);
+  push('barre');
+  push('pie','Ricevuta di vendita fra privati di bene usato.');
+  push('pie','Non valida ai fini fiscali.');
+
+  var h=pad*2;
+  righe.forEach(function(r){
+    h+= r.tipo==='logo'?62 : r.tipo==='nome'?22 : r.tipo==='doppia'?14 : r.tipo==='trat'?12
+      : r.tipo==='totale'?30 : r.tipo==='barre'?66 : r.tipo==='grazie'?24 : F+7;
+  });
+  cv.width=largh*scala; cv.height=h*scala;
+  ctx.scale(scala,scala);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,largh,h);
+  ctx.fillStyle='#151515';
+  var mono='"SFMono-Regular",Menlo,Consolas,ui-monospace,monospace';
+  y=pad;
+
+  function disegna(){
+    righe.forEach(function(r){
+      if(r.tipo==='logo'){
+        var cx=largh/2, cy=y+26;
+        ctx.beginPath(); ctx.arc(cx,cy,26,0,Math.PI*2); ctx.lineWidth=2; ctx.strokeStyle='#151515'; ctx.stroke();
+        if(LOGO_IMG){
+          try{ctx.drawImage(LOGO_IMG,cx-21,cy-21,42,42)}catch(e){}
+        } else {
+          var nome=(BRAND.nome||'Il tuo armadio').toUpperCase();
+          var ini=nome.split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w[0]}).join('')||'VS';
+          ctx.font='700 17px '+mono; ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText(ini,cx,cy+1);
+        }
+        y+=62;
+      } else if(r.tipo==='nome'){
+        ctx.font='700 '+(stretto?12.5:14)+'px '+mono; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+        ctx.fillText(spazia(r.a,1.6),largh/2,y+14); y+=22;
+      } else if(r.tipo==='piccolo'){
+        ctx.font=(F-1.5)+'px '+mono; ctx.textAlign='center'; ctx.fillStyle='#444';
+        ctx.fillText(r.a,largh/2,y+F); ctx.fillStyle='#151515'; y+=F+7;
+      } else if(r.tipo==='doppia'){
+        ctx.fillRect(pad,y+5,largh-pad*2,1); ctx.fillRect(pad,y+9,largh-pad*2,1); y+=14;
+      } else if(r.tipo==='trat'){
+        tratteggio(pad,y+6,largh-pad); y+=12;
+      } else if(r.tipo==='coppia'||r.tipo==='totale'){
+        var grande=r.tipo==='totale';
+        if(grande){ctx.fillRect(pad,y+4,largh-pad*2,1); y+=8}
+        ctx.font=(grande?'700 '+(F+3):''+F)+'px '+mono;
+        ctx.textAlign='left'; ctx.fillText(r.a,pad,y+F);
+        ctx.textAlign='right'; ctx.fillText(r.b,largh-pad,y+F);
+        y+= grande?22:F+7;
+      } else if(r.tipo==='desc'){
+        ctx.font=F+'px '+mono; ctx.textAlign='left';
+        var testo=r.a, max=largh-pad*2;
+        while(ctx.measureText(testo).width>max&&testo.length>3) testo=testo.slice(0,-1);
+        if(testo!==r.a) testo=testo.slice(0,-1)+'…';
+        ctx.fillText(testo,pad,y+F); y+=F+7;
+      } else if(r.tipo==='grazie'){
+        ctx.font='700 '+(F)+'px '+mono; ctx.textAlign='center';
+        ctx.fillText(r.a,largh/2,y+F); y+=24;
+      } else if(r.tipo==='barre'){
+        if($('r-barre').value!=='no'){
+          disegnaBarre(ctx,pad,y+6,largh-pad*2,34);
+          ctx.font=(F-1.5)+'px '+mono; ctx.textAlign='center';
+          ctx.fillText($('x-codice').textContent,largh/2,y+54);
+        }
+        y+=66;
+      } else if(r.tipo==='pie'){
+        ctx.font=(F-2)+'px '+mono; ctx.textAlign='center'; ctx.fillStyle='#5A5A5A';
+        ctx.fillText(r.a,largh/2,y+F+1); ctx.fillStyle='#151515'; y+=F+6;
+      }
+    });
+    scarica();
+  }
+  function spazia(t,px){return t.split('').join(String.fromCharCode(8202))}
+  function tratteggio(x1,yy,x2){
+    ctx.save(); ctx.strokeStyle='#B5B5B5'; ctx.lineWidth=1; ctx.setLineDash([2,3]);
+    ctx.beginPath(); ctx.moveTo(x1,yy+.5); ctx.lineTo(x2,yy+.5); ctx.stroke(); ctx.restore();
+  }
+  function disegnaBarre(c,x,yy,w,hh){
+    var seq='*'+String($('r-num').value||'0001').toUpperCase().replace(/[^0-9A-Z\-]/g,'')+'*',larg=[];
+    for(var i=0;i<seq.length;i++){var pt=C39[seq[i]];if(!pt)continue;
+      for(var j=0;j<9;j++)larg.push(pt[j]==='w'?3:1); larg.push(1);}
+    var tot=larg.reduce(function(a,b){return a+b},0),cx=x;
+    larg.forEach(function(ww,idx){var pw=ww/tot*w;
+      if(idx%2===0){c.fillStyle='#151515';c.fillRect(cx,yy,pw,hh)} cx+=pw;});
+  }
+  function esito(testo,nota){
+    var o='Scarica immagine'; btn.textContent=testo;
+    setTimeout(function(){btn.textContent=o},1800);
+    $('r-nota-png').textContent=nota||'';
+  }
+  function scarica(){
+    var nomeFile='ricevuta-'+(($('r-num').value||'0001').replace(/[^\w\-]/g,''))+'.png';
+    if(SALVA_OSPITE){
+      cv.toBlob(function(blob){
+        if(!blob){esito('Non riuscito','Riprova, oppure usa Stampa e scegli Salva in PDF.');return}
+        SALVA_OSPITE.save({filename:nomeFile,data:blob}).then(function(){
+          esito('Salvata');
+        },function(err){
+          var c=err&&err.code;
+          if(c==='declined') esito('Annullata');
+          else if(c==='too_large') esito('Troppo grande','Prova il formato 58 mm o un logo piu leggero.');
+          else if(c==='rate_limited') esito('Aspetta un attimo','Un salvataggio e gia in corso: riprova fra qualche secondo.');
+          else esito('Non riuscito','Usa Stampa e scegli Salva in PDF.');
+        });
+      },'image/png');
+      return;
+    }
+    try{
+      var url=cv.toDataURL('image/png');
+      var a=document.createElement('a');
+      a.href=url; a.download=nomeFile;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      esito('Scaricata');
+    }catch(e){
+      esito('Non riuscito','Il browser ha bloccato il download. Usa Stampa e scegli Salva in PDF.');
+    }
+  }
+
+  var LOGO_IMG=null;
+  if(BRAND.logo){
+    var im=new Image();
+    im.onload=function(){LOGO_IMG=im;disegna()};
+    im.onerror=function(){disegna()};
+    im.src=BRAND.logo;
+  } else disegna();
+});
+$('r-nota-png').textContent = STORAGE_OK ? '' : 'In questa anteprima il download puo\' essere bloccato: in quel caso usa Stampa e scegli Salva in PDF.';
+
+/* apertura da hash */
+var h=location.hash.replace('#','');
+if(STRUMENTI.some(function(s){return s.id===h})) vai(h);
+})();
+</script>
+</body>
+</html>
