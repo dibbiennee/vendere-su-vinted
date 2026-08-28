@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Vendere su Vinted</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="La guida completa per vendere su Vinted e Cartellino, gli strumenti che la accompagnano.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+:root{--scocca:#0A2E33;--acqua:#5FD3D8;--chiaro:#EAF4F4;--tenue:#9FB9BC;--riga:rgba(255,255,255,.12)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--scocca);color:var(--chiaro);
+  font-family:Archivo,"Helvetica Neue",Arial,system-ui,sans-serif;line-height:1.55;
+  -webkit-font-smoothing:antialiased;padding:0 1.2rem 3rem}
+.col{max-width:44rem;margin:0 auto}
+header{padding:clamp(2.4rem,9vw,4.5rem) 0 clamp(1.6rem,5vw,2.4rem)}
+.marchio{display:inline-flex;align-items:center;gap:.55rem;font-weight:700;margin-bottom:1.6rem}
+.marchio .m{width:28px;height:28px;border-radius:7px;background:var(--acqua);color:var(--scocca);
+  display:grid;place-content:center;font-size:.85rem}
+h1{margin:0;font-size:clamp(1.9rem,1.4rem + 2.4vw,2.8rem);line-height:1.12;letter-spacing:-.03em}
+.sotto{color:var(--tenue);font-size:clamp(1rem,.97rem + .2vw,1.12rem);margin:.8rem 0 0;max-width:32rem}
+.griglia{display:grid;gap:.9rem;margin-top:clamp(1.8rem,5vw,2.6rem)}
+@media(min-width:38rem){.griglia{grid-template-columns:1fr 1fr}}
+.carta{display:grid;gap:.35rem;align-content:start;text-decoration:none;color:inherit;
+  background:rgba(255,255,255,.055);border:1px solid var(--riga);border-radius:12px;padding:1.2rem;
+  transition:background .15s ease-out,border-color .15s ease-out,transform .15s ease-out}
+.carta:hover{background:rgba(255,255,255,.1);border-color:rgba(95,211,216,.45);transform:translateY(-2px)}
+.carta .ico{width:36px;height:36px;border-radius:9px;background:rgba(95,211,216,.16);
+  display:grid;place-content:center;margin-bottom:.45rem}
+.carta h2{margin:0;font-size:1.15rem;letter-spacing:-.01em}
+.carta p{margin:0;color:var(--tenue);font-size:.92rem;line-height:1.5}
+.carta .vai{color:var(--acqua);font-size:.86rem;font-weight:600;margin-top:.5rem}
+.secondari{margin-top:1.6rem;padding-top:1.4rem;border-top:1px solid var(--riga);display:grid;gap:.55rem}
+.secondari a{color:var(--chiaro);text-decoration:none;font-size:.94rem;display:flex;gap:.55rem;align-items:center;padding:.45rem 0}
+.secondari a:hover{color:var(--acqua)}
+.secondari span{color:var(--tenue);font-size:.86rem}
+footer{margin-top:2.4rem;color:#7E9B9E;font-size:.82rem;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="col">
+  <header>
+    <span class="marchio"><span class="m">V</span> Vendere su Vinted</span>
+    <h1>La guida, e gli strumenti che la accompagnano.</h1>
+    <p class="sotto">Novantacinque pagine di metodo verificabile per vendere davvero su Vinted, piu' Cartellino: sei strumenti che fanno i conti al posto tuo.</p>
+  </header>
+
+  <div class="griglia">
+    <a class="carta" href="app/">
+      <span class="ico"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M3 8h22v12H3z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><path d="M8 8v4M13 8v6M18 8v4M23 8v6" stroke="#5FD3D8" stroke-width="1.8"/></svg></span>
+      <h2>Cartellino</h2>
+      <p>Prezzo e margine, diagnosi degli articoli fermi, schede pronte, magazzino, conti e ricevute.</p>
+      <span class="vai">Apri gli strumenti &rarr;</span>
+    </a>
+    <a class="carta" href="landing/">
+      <span class="ico"><svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M6 3h16v22H6z" fill="none" stroke="#5FD3D8" stroke-width="1.8"/><path d="M10 9h8M10 13h8M10 17h5" stroke="#5FD3D8" stroke-width="1.8"/></svg></span>
+      <h2>La guida</h2>
+      <p>Quindici capitoli, dalla scelta della nicchia al fisco. Con estratti e indice completo.</p>
+      <span class="vai">Vedi la pagina &rarr;</span>
+    </a>
+  </div>
+
+  <div class="secondari">
+    <a href="GUIDA_COMPLETA_VINTED_2026.pdf">Scarica la guida in PDF <span>1,1 MB, 95 pagine</span></a>
+    <a href="GUIDA_COMPLETA_VINTED_2026.docx">Scarica la guida in DOCX <span>modificabile</span></a>
+    <a href="https://github.com/dibbiennee/vendere-su-vinted">Codice sorgente su GitHub <span>markdown dei capitoli e script di build</span></a>
+  </div>
+
+  <footer>
+    Progetto indipendente, non affiliato ne' approvato da Vinted. Le indicazioni fiscali hanno finalita' informativa e non sostituiscono un commercialista. Dati verificati a meta' 2026.
+  </footer>
+</div>
+</body>
+</html>
